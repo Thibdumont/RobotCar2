@@ -2,21 +2,23 @@
 #include "LEDManager.h"
 #include "VoltageManager.h"
 #include "MotorManager.h"
+#include "ServoManager.h"
 
 unsigned long currentTime = 0;
-VoltageManager *voltageManager = new VoltageManager();
-LEDManager *ledManager = new LEDManager();
-MotorManager *motorManager = new MotorManager();
-
-// put function declarations here:
+VoltageManager *voltageManager;
+LEDManager *ledManager;
+MotorManager *motorManager;
+ServoManager *servoManager;
 
 void setup()
 {
+
   Serial.begin(9600);
   voltageManager = new VoltageManager();
   ledManager = new LEDManager();
   motorManager = new MotorManager();
-  motorManager->testMotor();
+  servoManager = new ServoManager();
+  // motorManager->testMotor();
 }
 
 void loop()
@@ -25,4 +27,8 @@ void loop()
 
   voltageManager->updateVoltage(currentTime);
   ledManager->updateLED(currentTime, voltageManager->getVoltage());
+
+  // servoManager->testServo(currentTime);
+
+  servoManager->updateServo(currentTime);
 }
