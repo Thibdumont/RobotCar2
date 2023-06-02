@@ -3,12 +3,14 @@
 #include "VoltageManager.h"
 #include "MotorManager.h"
 #include "ServoManager.h"
+#include "RadarManager.h"
 
 unsigned long currentTime = 0;
 VoltageManager *voltageManager;
 LEDManager *ledManager;
 MotorManager *motorManager;
 ServoManager *servoManager;
+RadarManager *radarManager;
 
 void setup()
 {
@@ -18,7 +20,7 @@ void setup()
   ledManager = new LEDManager();
   motorManager = new MotorManager();
   servoManager = new ServoManager();
-  // motorManager->testMotor();
+  radarManager = new RadarManager();
 }
 
 void loop()
@@ -27,8 +29,5 @@ void loop()
 
   voltageManager->updateVoltage(currentTime);
   ledManager->updateLED(currentTime, voltageManager->getVoltage());
-
-  // servoManager->testServo(currentTime);
-
   servoManager->updateServo(currentTime);
 }
