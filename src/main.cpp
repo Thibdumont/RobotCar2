@@ -4,6 +4,7 @@
 #include "MotorManager.h"
 #include "ServoManager.h"
 #include "RadarManager.h"
+#include "InfraRedCaptorManager.h"
 
 unsigned long currentTime = 0;
 VoltageManager *voltageManager;
@@ -11,6 +12,7 @@ LEDManager *ledManager;
 MotorManager *motorManager;
 ServoManager *servoManager;
 RadarManager *radarManager;
+InfraRedCaptorManager *infraRedCaptorManager;
 
 void setup()
 {
@@ -21,6 +23,7 @@ void setup()
   motorManager = new MotorManager();
   servoManager = new ServoManager();
   radarManager = new RadarManager();
+  infraRedCaptorManager = new InfraRedCaptorManager();
 }
 
 void loop()
