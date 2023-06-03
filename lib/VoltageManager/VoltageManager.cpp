@@ -1,17 +1,18 @@
 #include "VoltageManager.h"
 
-VoltageManager::VoltageManager()
+VoltageManager::VoltageManager(TimeManager *timeManager)
 {
+    this->timeManager = timeManager;
     voltage = 0;
     lastVoltageMeasure = 0;
     pinMode(VOL_MEASURE_PIN, INPUT);
 }
 
-void VoltageManager::updateVoltage(unsigned long currentTime)
+void VoltageManager::updateVoltage()
 {
-    if (currentTime - lastVoltageMeasure > 1000)
+    if (timeManager->getLoopTime() - lastVoltageMeasure > 1000)
     {
-        lastVoltageMeasure = currentTime;
+        lastVoltageMeasure = timeManager->getLoopTime();
         voltage = (analogRead(VOL_MEASURE_PIN) * 5) * ((10 + 1.5) / 1.5) / 1024; // Read voltage value
                                                                                  // float voltage = (analogRead(VOL_MEASURE_PIN) * 0.0375);
         voltage = voltage + (voltage * 0.08);

@@ -3,19 +3,21 @@
 
 #include <Servo.h>
 #include <Arduino.h>
+#include "TimeManager.h"
 
 #define PIN_Servo_z 10
 
 class ServoManager
 {
 public:
-    ServoManager();
-    void applyRotation(uint8_t, unsigned long);
-    bool isServoTurnOver(unsigned long);
-    void updateServo(unsigned long);
-    void testServo(unsigned long);
+    ServoManager(TimeManager *);
+    void applyRotation(uint8_t);
+    bool isServoTurnOver();
+    void updateServo();
+    void testServo();
 
 private:
+    TimeManager *timeManager;
     Servo servo;
     uint8_t angle;
     unsigned long servoTurnStartTime;

@@ -2,6 +2,7 @@
 #define SERIAL_COM_MANAGER_H
 
 #include <ArduinoJson.h>
+#include "TimeManager.h"
 #include "MotorManager.h"
 #include "ServoManager.h"
 #include "RadarManager.h"
@@ -14,18 +15,19 @@
 class SerialComManager
 {
 public:
-    SerialComManager(MotorManager *, ServoManager *, VoltageManager *, RadarManager *);
-    void receiveSerialData(unsigned long);
-    void sendSerialData(unsigned long);
+    SerialComManager(TimeManager *, MotorManager *, ServoManager *, VoltageManager *, RadarManager *);
+    void receiveSerialData();
+    void sendSerialData();
 
 private:
-    unsigned long lastSystemDataSendTime;
-    unsigned long lastEspDataReceiveTime;
-    InboundData inboundData;
+    TimeManager *timeManager;
     MotorManager *motorManager;
     ServoManager *servoManager;
     VoltageManager *voltageManager;
     RadarManager *radarManager;
+    unsigned long lastSystemDataSendTime;
+    unsigned long lastEspDataReceiveTime;
+    InboundData inboundData;
 };
 
 #endif

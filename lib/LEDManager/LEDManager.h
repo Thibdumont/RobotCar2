@@ -2,6 +2,8 @@
 #define LED_MANAGER_H
 
 #include "FastLED.h"
+#include "TimeManager.h"
+#include "VoltageManager.h"
 
 #define PIN_RBGLED 4
 #define NUM_LEDS 1
@@ -10,12 +12,14 @@
 class LEDManager
 {
 public:
-    LEDManager();
-    void updateLED(unsigned long, float);
+    LEDManager(TimeManager *, VoltageManager *);
+    void updateLED();
     void changeColor(int, int, int);
-    void blinkColor(int, int, int, unsigned long);
+    void blinkColor(int, int, int);
 
 private:
+    TimeManager *timeManager;
+    VoltageManager *voltageManager;
     CRGB leds[NUM_LEDS];
     unsigned long blinkTimer;
     uint32_t getColor(uint8_t, uint8_t, uint8_t);

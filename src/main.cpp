@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "TimeManager.h"
 #include "LEDManager.h"
 #include "VoltageManager.h"
 #include "MotorManager.h"
@@ -7,7 +8,7 @@
 #include "InfraRedCaptorManager.h"
 #include "SerialComManager.h"
 
-unsigned long currentTime = 0;
+TimeManager *timeManager;
 VoltageManager *voltageManager;
 LEDManager *ledManager;
 MotorManager *motorManager;
@@ -20,22 +21,24 @@ void setup()
 {
 
   Serial.begin(9600);
-  voltageManager = new VoltageManager();
-  ledManager = new LEDManager();
+  timeManager = new TimeManager();
+  voltageManager = new VoltageManager(timeManager);
+  ledManager = new LEDManager(timeManager, voltageManager);
   motorManager = new MotorManager();
-  servoManager = new ServoManager();
+  servoManager = new ServoManager(timeManager);
   radarManager = new RadarManager();
   infraRedCaptorManager = new InfraRedCaptorManager();
-  serialComManager = new SerialComManager(motorManager, servoManager, voltageManager, radarManager);
+  serialComManager = new SerialComManager(timeManager, motorManager, servoManager, voltageManager, radarManager);
 }
 
 void loop()
 {
-  currentTime = millis();
+  timeManager->updateLoopTime();
+  voltageManager->updateVoltage();
+  ledManager->updateLED();
+  servoManager->updateServo();
+  serialComManager->receiveSerialData();
+  serialComManager->sendSerialData();
 
-  voltageManager->updateVoltage(currentTime);
-  ledManager->updateLED(currentTime, voltageManager->getVoltage());
-  servoManager->updateServo(currentTime);
-  serialComManager->receiveSerialData(currentTime);
-  serialComManager->sendSerialData(currentTime);
+  // timeManager->displayLoopPerformanceStats();
 }

@@ -1,7 +1,9 @@
 #include "LEDManager.h"
 
-LEDManager::LEDManager()
+LEDManager::LEDManager(TimeManager *timeManager, VoltageManager *voltageManager)
 {
+    this->timeManager = timeManager;
+    this->voltageManager = voltageManager;
     blinkTimer = 0;
     FastLED.addLeds<NEOPIXEL, PIN_RBGLED>(leds, NUM_LEDS);
     FastLED.setBrightness(20);
@@ -12,11 +14,11 @@ void LEDManager::changeColor(int r, int g, int b)
     FastLED.showColor(getColor(r, g, b));
 }
 
-void LEDManager::blinkColor(int r, int g, int b, unsigned long currentTime)
+void LEDManager::blinkColor(int r, int g, int b)
 {
-    if (currentTime - blinkTimer > BLINK_INTERVAL)
+    if (timeManager->getLoopTime() - blinkTimer > BLINK_INTERVAL)
     {
-        blinkTimer = currentTime;
+        blinkTimer = timeManager->getLoopTime();
         changeColor(r, g, b);
     }
     else
@@ -25,15 +27,15 @@ void LEDManager::blinkColor(int r, int g, int b, unsigned long currentTime)
     }
 }
 
-void LEDManager::updateLED(unsigned long currentTime, float voltage)
+void LEDManager::updateLED()
 {
-    if (voltage < 4.8)
+    if (voltageManager->getVoltage() < 4.8)
     { // Battery low
-        blinkColor(255, 0, 0, currentTime);
+        blinkColor(255, 0, 0);
     }
     else
     {
-        blinkColor(0, 255, 0, currentTime);
+        blinkColor(0, 255, 0);
     }
 }
 
