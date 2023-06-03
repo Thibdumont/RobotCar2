@@ -1,3 +1,5 @@
+#ifndef MOTOR_MANAGER_H
+#define MOTOR_MANAGER_H
 
 #include <Servo.h>
 #include <Arduino.h>
@@ -25,3 +27,5 @@ public:
 
 private:
 };
+
+#endif

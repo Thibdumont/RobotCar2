@@ -15,8 +15,8 @@ void VoltageManager::updateVoltage(unsigned long currentTime)
         voltage = (analogRead(VOL_MEASURE_PIN) * 5) * ((10 + 1.5) / 1.5) / 1024; // Read voltage value
                                                                                  // float voltage = (analogRead(VOL_MEASURE_PIN) * 0.0375);
         voltage = voltage + (voltage * 0.08);
-        Serial.print(" Voltage : ");
-        Serial.println(voltage, 3);
+        // Serial.print(" Voltage : ");
+        // Serial.println(voltage, 3);
     }
 }
 

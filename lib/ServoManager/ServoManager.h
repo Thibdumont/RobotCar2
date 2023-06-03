@@ -1,3 +1,5 @@
+#ifndef SERVO_MANAGER_H
+#define SERVO_MANAGER_H
 
 #include <Servo.h>
 #include <Arduino.h>
@@ -19,3 +21,5 @@ private:
     unsigned long servoTurnStartTime;
     unsigned long turnDuration;
 };
+
+#endif

@@ -5,6 +5,7 @@
 #include "ServoManager.h"
 #include "RadarManager.h"
 #include "InfraRedCaptorManager.h"
+#include "SerialComManager.h"
 
 unsigned long currentTime = 0;
 VoltageManager *voltageManager;
@@ -13,6 +14,7 @@ MotorManager *motorManager;
 ServoManager *servoManager;
 RadarManager *radarManager;
 InfraRedCaptorManager *infraRedCaptorManager;
+SerialComManager *serialComManager;
 
 void setup()
 {
@@ -24,6 +26,7 @@ void setup()
   servoManager = new ServoManager();
   radarManager = new RadarManager();
   infraRedCaptorManager = new InfraRedCaptorManager();
+  serialComManager = new SerialComManager(motorManager, servoManager, voltageManager, radarManager);
 }
 
 void loop()
@@ -33,4 +36,6 @@ void loop()
   voltageManager->updateVoltage(currentTime);
   ledManager->updateLED(currentTime, voltageManager->getVoltage());
   servoManager->updateServo(currentTime);
+  serialComManager->receiveSerialData(currentTime);
+  serialComManager->sendSerialData(currentTime);
 }

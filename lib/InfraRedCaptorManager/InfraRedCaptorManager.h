@@ -1,3 +1,6 @@
+#ifndef INFRA_RED_CAPTOR_MANAGER_H
+#define INFRA_RED_CAPTOR_MANAGER_H
+
 #include <Arduino.h>
 
 #define PIN_ITR20001xxxL A2
@@ -18,3 +21,6 @@ public:
 
 private:
 };
+
+#endif
+

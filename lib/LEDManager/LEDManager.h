@@ -1,3 +1,6 @@
+#ifndef LED_MANAGER_H
+#define LED_MANAGER_H
+
 #include "FastLED.h"
 
 #define PIN_RBGLED 4
@@ -17,3 +20,5 @@ private:
     unsigned long blinkTimer;
     uint32_t getColor(uint8_t, uint8_t, uint8_t);
 };
+
+#endif

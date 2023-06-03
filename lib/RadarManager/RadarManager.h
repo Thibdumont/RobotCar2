@@ -1,3 +1,5 @@
+#ifndef RADAR_MANAGER_H
+#define RADAR_MANAGER_H
 
 #include <Servo.h>
 #include <Arduino.h>
@@ -15,3 +17,5 @@ public:
 
 private:
 };
+
+#endif
