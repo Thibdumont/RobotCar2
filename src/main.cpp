@@ -20,7 +20,7 @@ SerialComManager *serialComManager;
 void setup()
 {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   timeManager = new TimeManager();
   voltageManager = new VoltageManager(timeManager);
   ledManager = new LEDManager(timeManager, voltageManager);
