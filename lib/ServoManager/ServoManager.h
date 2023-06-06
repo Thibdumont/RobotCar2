@@ -14,6 +14,7 @@ public:
     void applyRotation(uint8_t);
     bool isServoTurnOver();
     void updateServo();
+    uint8_t getAngle();
     void testServo();
 
 private:

@@ -12,8 +12,8 @@ SerialComManager::SerialComManager(
     this->servoManager = servoManager;
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
-    lastSystemDataSendTime = 0;
-    lastEspDataReceiveTime = 0;
+    lastSendTime = 0;
+    lastReceiveTime = 0;
 }
 
 void SerialComManager::receiveSerialData()
@@ -22,7 +22,7 @@ void SerialComManager::receiveSerialData()
     uint8_t c = "";
 
     // Si on a eu aucune donnée de l'ESP depuis un moment, on stoppe la voiture par sécurité
-    if (timeManager->getLoopTime() - lastEspDataReceiveTime > ESP_DATA_MAX_RECEIVE_INTERVAL)
+    if (timeManager->getLoopTime() - lastReceiveTime > ESP_DATA_MAX_RECEIVE_INTERVAL)
     {
         motorManager->stop();
         servoManager->applyRotation(90);
@@ -44,46 +44,40 @@ void SerialComManager::receiveSerialData()
 
         if (json.containsKey("commandCounter"))
         {
-            inboundData.commandCounter = (unsigned long)json["commandCounter"];
+            commandCounter = (unsigned long)json["commandCounter"];
         }
 
-        if (json.containsKey("directionX"))
+        if (json.containsKey("directionX") && json.containsKey("speedThrottle"))
         {
-            inboundData.turnForce = (float)json["directionX"];
-        }
-
-        if (json.containsKey("speedThrottle"))
-        {
-            inboundData.speedThrottle = (float)json["speedThrottle"];
+            motorManager->applyMotorTurnAndThrottle((float)json["directionX"], (float)json["speedThrottle"]);
         }
 
         if (json.containsKey("servoAngle"))
         {
-            inboundData.servoAngle = (int)json["servoAngle"];
-            servoManager->applyRotation(inboundData.servoAngle);
+            servoManager->applyRotation((int)json["servoAngle"]);
         }
 
         if (json.containsKey("speed"))
         {
-            inboundData.maxSpeed = (int)json["speed"];
+            motorManager->setMaxSpeed((int)json["speed"]);
         }
 
-        lastEspDataReceiveTime = millis();
+        lastReceiveTime = millis();
     }
 }
 
 void SerialComManager::sendSerialData()
 {
-    if (timeManager->getLoopTime() - lastSystemDataSendTime > SYSTEM_DATA_SEND_INTERVAL)
+    if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
         StaticJsonDocument<200> json;
         json["heartbeat"] = millis();
-        json["commandCounter"] = inboundData.commandCounter;
-        json["speed"] = inboundData.maxSpeed;
-        json["servoAngle"] = inboundData.servoAngle;
+        json["commandCounter"] = commandCounter;
+        json["speed"] = motorManager->getMaxSpeed();
+        json["servoAngle"] = servoManager->getAngle();
         json["distance"] = radarManager->getDistance();
         json["batteryVoltage"] = voltageManager->getVoltage();
         serializeJson(json, Serial);
-        lastSystemDataSendTime = timeManager->getLoopTime();
+        lastSendTime = timeManager->getLoopTime();
     }
 }

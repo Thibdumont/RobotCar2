@@ -1,7 +1,7 @@
 #ifndef TIME_MANAGER_H
 #define TIME_MANAGER_H
 
-#include <ArduinoJson.h>
+#include <Arduino.h>
 
 class TimeManager
 {

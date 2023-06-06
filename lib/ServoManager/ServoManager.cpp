@@ -37,6 +37,11 @@ void ServoManager::updateServo()
     }
 }
 
+uint8_t ServoManager::getAngle()
+{
+    return angle;
+}
+
 void ServoManager::testServo()
 {
     applyRotation(0);

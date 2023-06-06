@@ -7,9 +7,8 @@
 #include "ServoManager.h"
 #include "RadarManager.h"
 #include "VoltageManager.h"
-#include "InboundData.h"
 
-#define SYSTEM_DATA_SEND_INTERVAL 500
+#define SYSTEM_DATA_SEND_INTERVAL 100
 #define ESP_DATA_MAX_RECEIVE_INTERVAL 500
 
 class SerialComManager
@@ -25,9 +24,9 @@ private:
     ServoManager *servoManager;
     VoltageManager *voltageManager;
     RadarManager *radarManager;
-    unsigned long lastSystemDataSendTime;
-    unsigned long lastEspDataReceiveTime;
-    InboundData inboundData;
+    unsigned long lastSendTime;
+    unsigned long lastReceiveTime;
+    unsigned long commandCounter;
 };
 
 #endif
