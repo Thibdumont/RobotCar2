@@ -8,6 +8,7 @@
 #include "RadarManager.h"
 #include "InfraRedCaptorManager.h"
 #include "SerialComManager.h"
+#include "MpuManager.h"
 
 TimeManager *timeManager;
 VoltageManager *voltageManager;
@@ -18,6 +19,7 @@ ServoManager *servoManager;
 RadarManager *radarManager;
 InfraRedCaptorManager *infraRedCaptorManager;
 SerialComManager *serialComManager;
+MpuManager *mpuManager;
 
 void setup()
 {
@@ -32,6 +34,7 @@ void setup()
   servoManager = new ServoManager(timeManager);
   infraRedCaptorManager = new InfraRedCaptorManager();
   serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager);
+  mpuManager = new MpuManager();
 }
 
 void loop()
@@ -42,6 +45,7 @@ void loop()
   servoManager->updateServo();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
+  // mpuManager->readMpuValues();
 
   // timeManager->displayLoopPerformanceStats();
 }
