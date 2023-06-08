@@ -3,7 +3,7 @@
 
 #include <ArduinoJson.h>
 #include "TimeManager.h"
-#include "MotorManager.h"
+#include "CarControlManager.h"
 #include "ServoManager.h"
 #include "RadarManager.h"
 #include "VoltageManager.h"
@@ -14,13 +14,13 @@
 class SerialComManager
 {
 public:
-    SerialComManager(TimeManager *, MotorManager *, ServoManager *, VoltageManager *, RadarManager *);
+    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *);
     void receiveSerialData();
     void sendSerialData();
 
 private:
     TimeManager *timeManager;
-    MotorManager *motorManager;
+    CarControlManager *carControlManager;
     ServoManager *servoManager;
     VoltageManager *voltageManager;
     RadarManager *radarManager;

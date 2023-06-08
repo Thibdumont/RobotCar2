@@ -2,13 +2,13 @@
 
 SerialComManager::SerialComManager(
     TimeManager *timeManager,
-    MotorManager *motorManager,
+    CarControlManager *carControlManager,
     ServoManager *servoManager,
     VoltageManager *voltageManager,
     RadarManager *radarManager)
 {
     this->timeManager = timeManager;
-    this->motorManager = motorManager;
+    this->carControlManager = carControlManager;
     this->servoManager = servoManager;
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
@@ -24,7 +24,7 @@ void SerialComManager::receiveSerialData()
     // Si on a eu aucune donnée de l'ESP depuis un moment, on stoppe la voiture par sécurité
     if (timeManager->getLoopTime() - lastReceiveTime > ESP_DATA_MAX_RECEIVE_INTERVAL)
     {
-        motorManager->stop();
+        carControlManager->stop();
         servoManager->applyRotation(90);
     }
 
@@ -49,7 +49,7 @@ void SerialComManager::receiveSerialData()
 
         if (json.containsKey("directionX") && json.containsKey("speedThrottle"))
         {
-            motorManager->applyMotorTurnAndThrottle((float)json["directionX"], (float)json["speedThrottle"]);
+            carControlManager->applyMotorTurnAndThrottle((float)json["directionX"], (float)json["speedThrottle"]);
         }
 
         if (json.containsKey("servoAngle"))
@@ -59,7 +59,7 @@ void SerialComManager::receiveSerialData()
 
         if (json.containsKey("speed"))
         {
-            motorManager->setMaxSpeed((int)json["speed"]);
+            carControlManager->setMaxSpeed((int)json["speed"]);
         }
 
         lastReceiveTime = millis();
@@ -73,7 +73,7 @@ void SerialComManager::sendSerialData()
         StaticJsonDocument<200> json;
         json["heartbeat"] = millis();
         json["commandCounter"] = commandCounter;
-        json["speed"] = motorManager->getMaxSpeed();
+        json["speed"] = carControlManager->getMaxSpeed();
         json["servoAngle"] = servoManager->getAngle();
         json["distance"] = radarManager->getDistance();
         json["batteryVoltage"] = voltageManager->getVoltage();
