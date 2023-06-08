@@ -16,7 +16,7 @@ public:
     int getMaxSpeed();
     void setMaxSpeed(int);
     void stop();
-    void preventCrash();
+    bool isGoingForwardSafe();
     void applyMotorTurnAndThrottle(float turnForce, float motorThrottle);
 
 private:

@@ -27,12 +27,9 @@ void CarControlManager::stop()
     motorManager->stop();
 }
 
-void CarControlManager::preventCrash()
+bool CarControlManager::isGoingForwardSafe()
 {
-    if (radarManager->getDistance() < 8)
-    {
-        stop();
-    }
+    return radarManager->getDistance() > 8;
 }
 
 void CarControlManager::applyMotorTurnAndThrottle(float turnForce, float motorThrottle)
@@ -58,7 +55,14 @@ void CarControlManager::applyMotorTurnAndThrottle(float turnForce, float motorTh
     rightSpeed = getSpeed(MotorSide::RIGHT, rightSpeed, motorThrottle, turnForce);
     rightDirection = getDirection(MotorSide::RIGHT, motorThrottle, turnForce);
 
-    motorManager->applyRotation(leftDirection, leftSpeed, rightDirection, rightSpeed);
+    if (isGoingForwardSafe() || leftDirection == MotorDirection::BACKWARD || rightDirection == MotorDirection::BACKWARD)
+    {
+        motorManager->applyRotation(leftDirection, leftSpeed, rightDirection, rightSpeed);
+    }
+    else
+    {
+        stop();
+    }
 }
 
 uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, float motorThrottle, float turnForce)

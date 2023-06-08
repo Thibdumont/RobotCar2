@@ -42,7 +42,6 @@ void loop()
   servoManager->updateServo();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
-  // carControlManager->preventCrash();
 
   // timeManager->displayLoopPerformanceStats();
 }
