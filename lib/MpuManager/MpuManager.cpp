@@ -1,5 +1,10 @@
 #include "MpuManager.h"
 
+/*
+From : Dejan
+https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
+*/
+
 MpuManager::MpuManager()
 {
     Wire.begin();                // Initialize comunication

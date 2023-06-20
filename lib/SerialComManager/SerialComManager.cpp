@@ -47,19 +47,26 @@ void SerialComManager::receiveSerialData()
             commandCounter = (unsigned long)json["commandCounter"];
         }
 
-        if (json.containsKey("directionX") && json.containsKey("speedThrottle"))
+        if (json.containsKey("directionX"))
         {
-            carControlManager->applyMotorTurnAndThrottle((float)json["directionX"], (float)json["speedThrottle"]);
+            carControlManager->setDirectionX((float)json["directionX"]);
+            carControlManager->applyMotorDirectionXAndThrottle();
         }
 
-        if (json.containsKey("servoAngle"))
+        if (json.containsKey("speedThrottle"))
         {
-            servoManager->applyRotation((int)json["servoAngle"]);
+            carControlManager->setSpeedThrottle((float)json["speedThrottle"]);
+            carControlManager->applyMotorDirectionXAndThrottle();
         }
 
-        if (json.containsKey("speed"))
+        if (json.containsKey("headPosition"))
         {
-            carControlManager->setMaxSpeed((int)json["speed"]);
+            servoManager->applyRotation((int)json["headPosition"]);
+        }
+
+        if (json.containsKey("maxSpeed"))
+        {
+            carControlManager->setMaxSpeed((int)json["maxSpeed"]);
         }
 
         lastReceiveTime = millis();
@@ -73,9 +80,10 @@ void SerialComManager::sendSerialData()
         StaticJsonDocument<200> json;
         json["heartbeat"] = millis();
         json["commandCounter"] = commandCounter;
-        json["speed"] = carControlManager->getMaxSpeed();
+        json["maxSpeed"] = carControlManager->getMaxSpeed();
         json["servoAngle"] = servoManager->getAngle();
         json["distance"] = radarManager->getDistance();
+        json["loopDuration"] = timeManager->getLoopAverageDuration();
         json["batteryVoltage"] = voltageManager->getVoltage();
         serializeJson(json, Serial);
         lastSendTime = timeManager->getLoopTime();

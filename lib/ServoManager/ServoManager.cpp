@@ -16,7 +16,8 @@ void ServoManager::applyRotation(uint8_t newAngle)
     if (angle != newAngle)
     {
         servoTurnStartTime = timeManager->getLoopTime();
-        turnDuration = (abs(newAngle - angle) * 3) + 10;
+        // turnDuration = (abs(newAngle - angle) * 3) + 15;
+        turnDuration = DELAY_BEFORE_SERVO_DETACH;
         angle = newAngle;
 
         servo.attach(PIN_Servo_z);

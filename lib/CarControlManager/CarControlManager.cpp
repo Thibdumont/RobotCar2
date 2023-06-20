@@ -32,13 +32,19 @@ bool CarControlManager::isGoingForwardSafe()
     return radarManager->getDistance() > 8;
 }
 
-void CarControlManager::applyMotorTurnAndThrottle(float turnForce, float motorThrottle)
+void CarControlManager::setDirectionX(float directionX)
 {
-    this->turnForce = turnForce;
-    this->motorThrottle = motorThrottle;
+    this->directionX = directionX;
+}
+void CarControlManager::setSpeedThrottle(float speedThrottle)
+{
+    this->speedThrottle = speedThrottle;
+}
 
+void CarControlManager::applyMotorDirectionXAndThrottle()
+{
     // Si pas d'input, on stoppe les moteurs
-    if ((motorThrottle > -MOTOR_THROTTLE_DEADZONE && motorThrottle < MOTOR_THROTTLE_DEADZONE) && (turnForce > -TURN_DEAD_ZONE && turnForce < TURN_DEAD_ZONE))
+    if ((speedThrottle > -MOTOR_THROTTLE_DEADZONE && speedThrottle < MOTOR_THROTTLE_DEADZONE) && (directionX > -TURN_DEAD_ZONE && directionX < TURN_DEAD_ZONE))
     {
         motorManager->stop();
         return;
@@ -47,13 +53,13 @@ void CarControlManager::applyMotorTurnAndThrottle(float turnForce, float motorTh
     MotorDirection leftDirection;
     MotorDirection rightDirection;
 
-    uint8_t leftSpeed = (uint8_t)((float)maxSpeed * abs(motorThrottle));
-    uint8_t rightSpeed = (uint8_t)((float)maxSpeed * abs(motorThrottle));
+    uint8_t leftSpeed = (uint8_t)((float)maxSpeed * abs(speedThrottle));
+    uint8_t rightSpeed = (uint8_t)((float)maxSpeed * abs(speedThrottle));
 
-    leftSpeed = getSpeed(MotorSide::LEFT, leftSpeed, motorThrottle, turnForce);
-    leftDirection = getDirection(MotorSide::LEFT, motorThrottle, turnForce);
-    rightSpeed = getSpeed(MotorSide::RIGHT, rightSpeed, motorThrottle, turnForce);
-    rightDirection = getDirection(MotorSide::RIGHT, motorThrottle, turnForce);
+    leftSpeed = getSpeed(MotorSide::LEFT, leftSpeed, speedThrottle, directionX);
+    leftDirection = getDirection(MotorSide::LEFT, speedThrottle, directionX);
+    rightSpeed = getSpeed(MotorSide::RIGHT, rightSpeed, speedThrottle, directionX);
+    rightDirection = getDirection(MotorSide::RIGHT, speedThrottle, directionX);
 
     if (isGoingForwardSafe() || leftDirection == MotorDirection::BACKWARD || rightDirection == MotorDirection::BACKWARD)
     {
@@ -65,15 +71,15 @@ void CarControlManager::applyMotorTurnAndThrottle(float turnForce, float motorTh
     }
 }
 
-uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, float motorThrottle, float turnForce)
+uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, float speedThrottle, float directionX)
 {
-    if (motorThrottle < -MOTOR_THROTTLE_DEADZONE || motorThrottle > MOTOR_THROTTLE_DEADZONE)
+    if (speedThrottle < -MOTOR_THROTTLE_DEADZONE || speedThrottle > MOTOR_THROTTLE_DEADZONE)
     {
         if (motorSide == MotorSide::LEFT)
         {
-            if (turnForce < TURN_DEAD_ZONE)
+            if (directionX < TURN_DEAD_ZONE)
             {
-                return baseSpeed - (baseSpeed * abs(turnForce) * (1 - abs(motorThrottle / 2)));
+                return baseSpeed - (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
             }
             else
             {
@@ -82,31 +88,31 @@ uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, floa
         }
         else if (motorSide == MotorSide::RIGHT)
         {
-            if (turnForce < TURN_DEAD_ZONE)
+            if (directionX < TURN_DEAD_ZONE)
             {
                 return baseSpeed;
             }
             else
             {
-                return baseSpeed - (baseSpeed * abs(turnForce) * (1 - abs(motorThrottle / 2)));
+                return baseSpeed - (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
             }
         }
     }
     else
     {
-        return maxSpeed * abs(turnForce);
+        return maxSpeed * abs(directionX);
     }
 
     return 0;
 }
 
-MotorDirection CarControlManager::getDirection(MotorSide motorSide, float motorThrottle, float turnForce)
+MotorDirection CarControlManager::getDirection(MotorSide motorSide, float speedThrottle, float directionX)
 {
-    if (motorThrottle < -MOTOR_THROTTLE_DEADZONE)
+    if (speedThrottle < -MOTOR_THROTTLE_DEADZONE)
     {
         return MotorDirection::BACKWARD;
     }
-    else if (motorThrottle > MOTOR_THROTTLE_DEADZONE)
+    else if (speedThrottle > MOTOR_THROTTLE_DEADZONE)
     {
         return MotorDirection::FORWARD;
     }
@@ -114,7 +120,7 @@ MotorDirection CarControlManager::getDirection(MotorSide motorSide, float motorT
     {
         if (motorSide == MotorSide::LEFT)
         {
-            if (turnForce < TURN_DEAD_ZONE)
+            if (directionX < TURN_DEAD_ZONE)
             {
                 return MotorDirection::BACKWARD;
             }
@@ -125,7 +131,7 @@ MotorDirection CarControlManager::getDirection(MotorSide motorSide, float motorT
         }
         else
         {
-            if (turnForce < TURN_DEAD_ZONE)
+            if (directionX < TURN_DEAD_ZONE)
             {
                 return MotorDirection::FORWARD;
             }

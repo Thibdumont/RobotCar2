@@ -6,6 +6,7 @@
 #include "TimeManager.h"
 
 #define PIN_Servo_z 10
+#define DELAY_BEFORE_SERVO_DETACH 1000
 
 class ServoManager
 {
