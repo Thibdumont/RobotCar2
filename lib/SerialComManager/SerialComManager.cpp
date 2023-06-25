@@ -83,7 +83,7 @@ void SerialComManager::sendSerialData()
         json["maxSpeed"] = carControlManager->getMaxSpeed();
         json["servoAngle"] = servoManager->getAngle();
         json["distance"] = radarManager->getDistance();
-        json["loopDuration"] = timeManager->getLoopAverageDuration();
+        json["unoLoopDuration"] = timeManager->getLoopAverageDuration();
         json["batteryVoltage"] = voltageManager->getVoltage();
         serializeJson(json, Serial);
         lastSendTime = timeManager->getLoopTime();

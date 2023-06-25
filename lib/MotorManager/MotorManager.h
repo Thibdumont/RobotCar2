@@ -4,7 +4,7 @@
 #include <Servo.h>
 #include <Arduino.h>
 
-#define MOTOR_MAX_SPEED 250
+#define MOTOR_MAX_SPEED 200
 
 #define PIN_Motor_PWMA 5
 #define PIN_Motor_PWMB 6
