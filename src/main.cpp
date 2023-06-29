@@ -9,10 +9,12 @@
 #include "InfraRedCaptorManager.h"
 #include "SerialComManager.h"
 #include "MpuManager.h"
+#include "ArduinoShieldButtonManager.h"
 
 TimeManager *timeManager;
 VoltageManager *voltageManager;
 LEDManager *ledManager;
+ArduinoShieldButtonManager *arduinoShieldButtonManager;
 MotorManager *motorManager;
 CarControlManager *carControlManager;
 ServoManager *servoManager;
@@ -28,6 +30,7 @@ void setup()
   timeManager = new TimeManager();
   voltageManager = new VoltageManager(timeManager);
   ledManager = new LEDManager(timeManager, voltageManager);
+  arduinoShieldButtonManager = new ArduinoShieldButtonManager(ledManager);
   radarManager = new RadarManager();
   motorManager = new MotorManager();
   carControlManager = new CarControlManager(motorManager, radarManager);
@@ -41,10 +44,11 @@ void loop()
 {
   timeManager->updateLoopTime();
   voltageManager->updateVoltage();
-  ledManager->updateLED();
+  // ledManager->updateLED();
   servoManager->updateServo();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
+
   // mpuManager->readMpuValues();
 
   // timeManager->displayLoopPerformanceStats();

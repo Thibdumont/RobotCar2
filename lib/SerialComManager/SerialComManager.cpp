@@ -21,7 +21,7 @@ void SerialComManager::receiveSerialData()
     static String serialPortData = "";
     uint8_t c = "";
 
-    // Si on a eu aucune donnée de l'ESP depuis un moment, on stoppe la voiture par sécurité
+    // If we didn't receive some data from ESP for a certain amount of time, we stop the car to be safe
     if (timeManager->getLoopTime() - lastReceiveTime > ESP_DATA_MAX_RECEIVE_INTERVAL)
     {
         carControlManager->stop();

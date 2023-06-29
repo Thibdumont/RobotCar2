@@ -6,7 +6,7 @@ LEDManager::LEDManager(TimeManager *timeManager, VoltageManager *voltageManager)
     this->voltageManager = voltageManager;
     blinkTimer = 0;
     FastLED.addLeds<NEOPIXEL, PIN_RBGLED>(leds, NUM_LEDS);
-    FastLED.setBrightness(20);
+    FastLED.setBrightness(1);
 }
 
 void LEDManager::changeColor(int r, int g, int b)
