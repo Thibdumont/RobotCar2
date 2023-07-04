@@ -27,18 +27,6 @@ void LEDManager::blinkColor(int r, int g, int b)
     }
 }
 
-void LEDManager::updateLED()
-{
-    if (voltageManager->getVoltage() < 4.8)
-    { // Battery low
-        blinkColor(255, 0, 0);
-    }
-    else
-    {
-        blinkColor(0, 255, 0);
-    }
-}
-
 uint32_t LEDManager::getColor(uint8_t r, uint8_t g, uint8_t b)
 {
     return (((uint32_t)r << 16) | ((uint32_t)g << 8) | b);

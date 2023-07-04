@@ -5,13 +5,15 @@ SerialComManager::SerialComManager(
     CarControlManager *carControlManager,
     ServoManager *servoManager,
     VoltageManager *voltageManager,
-    RadarManager *radarManager)
+    RadarManager *radarManager,
+    ArduinoShieldButtonManager *arduinoShieldButtonManager)
 {
     this->timeManager = timeManager;
     this->carControlManager = carControlManager;
     this->servoManager = servoManager;
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
+    this->arduinoShieldButtonManager = arduinoShieldButtonManager;
     lastSendTime = 0;
     lastReceiveTime = 0;
 }
@@ -41,11 +43,6 @@ void SerialComManager::receiveSerialData()
         StaticJsonDocument<200> json;
         deserializeJson(json, serialPortData);
         serialPortData = "";
-
-        if (json.containsKey("commandCounter"))
-        {
-            commandCounter = (unsigned long)json["commandCounter"];
-        }
 
         if (json.containsKey("directionX"))
         {
@@ -79,12 +76,12 @@ void SerialComManager::sendSerialData()
     {
         StaticJsonDocument<200> json;
         json["heartbeat"] = millis();
-        json["commandCounter"] = commandCounter;
         json["maxSpeed"] = carControlManager->getMaxSpeed();
         json["servoAngle"] = servoManager->getAngle();
         json["distance"] = radarManager->getDistance();
         json["unoLoopDuration"] = timeManager->getLoopAverageDuration();
         json["batteryVoltage"] = voltageManager->getVoltage();
+        json["wifiSoftApMode"] = arduinoShieldButtonManager->getWifiSoftApMode();
         serializeJson(json, Serial);
         lastSendTime = timeManager->getLoopTime();
     }

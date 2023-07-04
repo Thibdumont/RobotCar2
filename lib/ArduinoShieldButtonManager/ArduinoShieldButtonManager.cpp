@@ -3,34 +3,34 @@
 ArduinoShieldButtonManager::ArduinoShieldButtonManager(LEDManager *ledManager)
 {
     this->ledManager = ledManager;
-    lastButtonRegisterTime = millis();
+    lastButtonState = LOW;
     wifiSoftApMode = false;
-    init();
-}
-
-void ArduinoShieldButtonManager::init()
-{
     pinMode(ARDUINO_SHIELD_BUTTON_PIN, INPUT_PULLUP);
-    attachPinChangeInterrupt(ARDUINO_SHIELD_BUTTON_PIN, staticGetButtonValue, FALLING);
+    ledManager->changeColor(0, 255, 0);
 }
 
-void ArduinoShieldButtonManager::getButtonValue()
+void ArduinoShieldButtonManager::detectPress()
 {
-    if (millis() - lastButtonRegisterTime > ARDUINO_SHIELD_BUTTON_PRESS_MIN_INTERVAL)
+    int buttonState = digitalRead(ARDUINO_SHIELD_BUTTON_PIN);
+    if (buttonState != lastButtonState)
     {
-        lastButtonRegisterTime = millis();
-        wifiSoftApMode = !wifiSoftApMode;
-        if (wifiSoftApMode)
+        lastButtonState = buttonState;
+        if (buttonState == LOW)
         {
-            ledManager->changeColor(255, 0, 0);
-        }
-        else
-        {
-            ledManager->changeColor(0, 255, 0);
+            wifiSoftApMode = !wifiSoftApMode;
+            if (wifiSoftApMode)
+            {
+                ledManager->changeColor(0, 0, 255);
+            }
+            else
+            {
+                ledManager->changeColor(0, 255, 0);
+            }
         }
     }
 }
 
-void ArduinoShieldButtonManager::test()
+boolean ArduinoShieldButtonManager::getWifiSoftApMode()
 {
+    return wifiSoftApMode;
 }

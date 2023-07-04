@@ -13,7 +13,6 @@ class LEDManager
 {
 public:
     LEDManager(TimeManager *, VoltageManager *);
-    void updateLED();
     void changeColor(int, int, int);
     void blinkColor(int, int, int);
 
