@@ -29,7 +29,7 @@ void CarControlManager::stop()
 
 bool CarControlManager::isGoingForwardSafe()
 {
-    return radarManager->getDistance() > 8;
+    return radarManager->getDistance() > FORWARD_SAFE_DISTANCE;
 }
 
 void CarControlManager::setDirectionX(float directionX)

@@ -26,8 +26,16 @@ private:
     VoltageManager *voltageManager;
     RadarManager *radarManager;
     ArduinoShieldButtonManager *arduinoShieldButtonManager;
+    boolean handshakeRequest;
     unsigned long lastSendTime;
     unsigned long lastReceiveTime;
+    unsigned long heartbeat;
+    int maxSpeed;
+    uint8_t servoAngle;
+    uint16_t radarDistance;
+    float unoLoopDuration;
+    float batteryVoltage;
+    boolean wifiSoftApMode;
 };
 
 #endif

@@ -14,6 +14,8 @@ SerialComManager::SerialComManager(
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
     this->arduinoShieldButtonManager = arduinoShieldButtonManager;
+    handshakeRequest = false;
+    heartbeat = 0;
     lastSendTime = 0;
     lastReceiveTime = 0;
 }
@@ -40,9 +42,14 @@ void SerialComManager::receiveSerialData()
     }
     if (c == '}') // Data frame tail check
     {
-        StaticJsonDocument<200> json;
+        StaticJsonDocument<300> json;
         deserializeJson(json, serialPortData);
         serialPortData = "";
+
+        if (json.containsKey("handshake"))
+        {
+            handshakeRequest = true;
+        }
 
         if (json.containsKey("directionX"))
         {
@@ -74,15 +81,40 @@ void SerialComManager::sendSerialData()
 {
     if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
-        StaticJsonDocument<200> json;
-        json["heartbeat"] = millis();
-        json["maxSpeed"] = carControlManager->getMaxSpeed();
-        json["servoAngle"] = servoManager->getAngle();
-        json["distance"] = radarManager->getDistance();
-        json["unoLoopDuration"] = timeManager->getLoopAverageDuration();
-        json["batteryVoltage"] = voltageManager->getVoltage();
-        json["wifiSoftApMode"] = arduinoShieldButtonManager->getWifiSoftApMode();
+        StaticJsonDocument<300> json;
+        json["heartbeat"] = heartbeat++;
+        if (carControlManager->getMaxSpeed() != maxSpeed || handshakeRequest)
+        {
+            maxSpeed = carControlManager->getMaxSpeed();
+            json["maxSpeed"] = maxSpeed;
+        }
+        if (servoManager->getAngle() != servoAngle || handshakeRequest)
+        {
+            servoAngle = servoManager->getAngle();
+            json["servoAngle"] = servoAngle;
+        }
+        if (radarManager->getDistance() != radarDistance || handshakeRequest)
+        {
+            radarDistance = radarManager->getDistance();
+            json["radarDistance"] = radarDistance;
+        }
+        if (timeManager->getLoopAverageDuration() != unoLoopDuration || handshakeRequest)
+        {
+            unoLoopDuration = timeManager->getLoopAverageDuration();
+            json["unoLoopDuration"] = unoLoopDuration;
+        }
+        if (voltageManager->getVoltage() != batteryVoltage || handshakeRequest)
+        {
+            batteryVoltage = voltageManager->getVoltage();
+            json["batteryVoltage"] = batteryVoltage;
+        }
+        if (arduinoShieldButtonManager->getWifiSoftApMode() != wifiSoftApMode || handshakeRequest)
+        {
+            wifiSoftApMode = arduinoShieldButtonManager->getWifiSoftApMode();
+            json["wifiSoftApMode"] = wifiSoftApMode;
+        }
         serializeJson(json, Serial);
+        handshakeRequest = false; // Handshake occurs only once
         lastSendTime = timeManager->getLoopTime();
     }
 }

@@ -7,6 +7,7 @@
 
 #define TURN_DEAD_ZONE 0.05
 #define MOTOR_THROTTLE_DEADZONE 0.01
+#define FORWARD_SAFE_DISTANCE 12
 
 class CarControlManager
 {
