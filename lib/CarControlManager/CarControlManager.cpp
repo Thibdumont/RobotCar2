@@ -63,8 +63,8 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
     MotorDirection leftDirection;
     MotorDirection rightDirection;
 
-    uint8_t leftSpeed = (uint8_t)((float)_maxSpeed * abs(speedThrottle));
-    uint8_t rightSpeed = (uint8_t)((float)_maxSpeed * abs(speedThrottle));
+    uint16_t leftSpeed = (uint16_t)((float)_maxSpeed * abs(speedThrottle));
+    uint16_t rightSpeed = (uint16_t)((float)_maxSpeed * abs(speedThrottle));
 
     leftSpeed = getSpeed(MotorSide::LEFT, leftSpeed, speedThrottle, directionX);
     leftDirection = getDirection(MotorSide::LEFT, speedThrottle, directionX);
@@ -81,7 +81,7 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
     }
 }
 
-uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, float speedThrottle, float directionX)
+uint16_t CarControlManager::getSpeed(MotorSide motorSide, uint16_t baseSpeed, float speedThrottle, float directionX)
 {
     if (speedThrottle < -MOTOR_THROTTLE_DEADZONE || speedThrottle > MOTOR_THROTTLE_DEADZONE)
     {
@@ -116,7 +116,7 @@ uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, floa
     return 0;
 }
 
-uint8_t CarControlManager::getDirectionSpeedModifier(uint8_t baseSpeed, float speedThrottle, float directionX)
+uint16_t CarControlManager::getDirectionSpeedModifier(uint16_t baseSpeed, float speedThrottle, float directionX)
 {
     return (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
 }

@@ -25,7 +25,6 @@ MpuManager *mpuManager;
 
 void setup()
 {
-
   Serial.begin(115200);
   timeManager = new TimeManager();
   voltageManager = new VoltageManager(timeManager);

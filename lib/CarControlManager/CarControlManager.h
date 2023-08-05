@@ -29,8 +29,8 @@ private:
     float speedThrottle;
     bool boost;
     int maxSpeed;
-    uint8_t getSpeed(MotorSide motorDirection, uint8_t baseSpeed, float speedThrottle, float directionX);
-    uint8_t getDirectionSpeedModifier(uint8_t baseSpeed, float speedThrottle, float directionX);
+    uint16_t getSpeed(MotorSide motorDirection, uint16_t baseSpeed, float speedThrottle, float directionX);
+    uint16_t getDirectionSpeedModifier(uint16_t baseSpeed, float speedThrottle, float directionX);
     MotorDirection getDirection(MotorSide motorDirection, float speedThrottle, float directionX);
 };
 

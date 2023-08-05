@@ -9,7 +9,7 @@ MotorManager::MotorManager()
     pinMode(PIN_Motor_STBY, OUTPUT);
 }
 
-void MotorManager::applyRotation(MotorDirection leftDirection, uint8_t leftSpeed, MotorDirection rightDirection, uint8_t rightSpeed)
+void MotorManager::applyRotation(MotorDirection leftDirection, uint16_t leftSpeed, MotorDirection rightDirection, uint16_t rightSpeed)
 {
     digitalWrite(PIN_Motor_STBY, HIGH);
 

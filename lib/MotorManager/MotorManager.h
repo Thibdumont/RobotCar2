@@ -4,7 +4,7 @@
 #include <Servo.h>
 #include <Arduino.h>
 
-#define MOTOR_MAX_SPEED 200
+#define MOTOR_MAX_SPEED 250
 
 #define PIN_Motor_PWMA 5
 #define PIN_Motor_PWMB 6
@@ -28,7 +28,7 @@ class MotorManager
 {
 public:
     MotorManager();
-    void applyRotation(MotorDirection, uint8_t, MotorDirection, uint8_t);
+    void applyRotation(MotorDirection, uint16_t, MotorDirection, uint16_t);
     void stop();
     void testMotor();
 
