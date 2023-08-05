@@ -6,6 +6,9 @@ CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *r
     this->radarManager = radarManager;
 
     maxSpeed = MOTOR_MAX_SPEED;
+    speedThrottle = 0;
+    directionX = 0;
+    boost = false;
 }
 
 int CarControlManager::getMaxSpeed()
@@ -36,9 +39,15 @@ void CarControlManager::setDirectionX(float directionX)
 {
     this->directionX = directionX;
 }
+
 void CarControlManager::setSpeedThrottle(float speedThrottle)
 {
     this->speedThrottle = speedThrottle;
+}
+
+void CarControlManager::setBoost(bool boost)
+{
+    this->boost = boost;
 }
 
 void CarControlManager::applyMotorDirectionXAndThrottle()
@@ -50,11 +59,12 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
         return;
     }
 
+    int _maxSpeed = this->boost ? MOTOR_MAX_SPEED : this->maxSpeed;
     MotorDirection leftDirection;
     MotorDirection rightDirection;
 
-    uint8_t leftSpeed = (uint8_t)((float)maxSpeed * abs(speedThrottle));
-    uint8_t rightSpeed = (uint8_t)((float)maxSpeed * abs(speedThrottle));
+    uint8_t leftSpeed = (uint8_t)((float)_maxSpeed * abs(speedThrottle));
+    uint8_t rightSpeed = (uint8_t)((float)_maxSpeed * abs(speedThrottle));
 
     leftSpeed = getSpeed(MotorSide::LEFT, leftSpeed, speedThrottle, directionX);
     leftDirection = getDirection(MotorSide::LEFT, speedThrottle, directionX);
@@ -79,22 +89,22 @@ uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, floa
         {
             if (directionX < TURN_DEAD_ZONE)
             {
-                return baseSpeed - (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
+                return baseSpeed - this->getDirectionSpeedModifier(baseSpeed, speedThrottle, directionX);
             }
             else
             {
-                return baseSpeed;
+                return baseSpeed + this->getDirectionSpeedModifier(baseSpeed, speedThrottle, directionX);
             }
         }
         else if (motorSide == MotorSide::RIGHT)
         {
             if (directionX < TURN_DEAD_ZONE)
             {
-                return baseSpeed;
+                return baseSpeed + this->getDirectionSpeedModifier(baseSpeed, speedThrottle, directionX);
             }
             else
             {
-                return baseSpeed - (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
+                return baseSpeed - this->getDirectionSpeedModifier(baseSpeed, speedThrottle, directionX);
             }
         }
     }
@@ -104,6 +114,11 @@ uint8_t CarControlManager::getSpeed(MotorSide motorSide, uint8_t baseSpeed, floa
     }
 
     return 0;
+}
+
+uint8_t CarControlManager::getDirectionSpeedModifier(uint8_t baseSpeed, float speedThrottle, float directionX)
+{
+    return (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
 }
 
 MotorDirection CarControlManager::getDirection(MotorSide motorSide, float speedThrottle, float directionX)

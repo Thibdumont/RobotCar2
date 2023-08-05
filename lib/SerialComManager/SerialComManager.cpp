@@ -63,6 +63,12 @@ void SerialComManager::receiveSerialData()
             carControlManager->applyMotorDirectionXAndThrottle();
         }
 
+        if (json.containsKey("boost"))
+        {
+            carControlManager->setBoost(json["boost"].as<String>().equals("true"));
+            carControlManager->applyMotorDirectionXAndThrottle();
+        }
+
         if (json.containsKey("headPosition"))
         {
             servoManager->applyRotation((int)json["headPosition"]);

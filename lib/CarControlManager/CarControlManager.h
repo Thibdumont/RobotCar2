@@ -16,6 +16,7 @@ public:
     int getMaxSpeed();
     void setMaxSpeed(int);
     void setSpeedThrottle(float);
+    void setBoost(bool);
     void setDirectionX(float);
     void stop();
     bool isGoingForwardSafe();
@@ -26,8 +27,10 @@ private:
     RadarManager *radarManager;
     float directionX;
     float speedThrottle;
+    bool boost;
     int maxSpeed;
     uint8_t getSpeed(MotorSide motorDirection, uint8_t baseSpeed, float speedThrottle, float directionX);
+    uint8_t getDirectionSpeedModifier(uint8_t baseSpeed, float speedThrottle, float directionX);
     MotorDirection getDirection(MotorSide motorDirection, float speedThrottle, float directionX);
 };
 
