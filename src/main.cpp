@@ -43,7 +43,6 @@ void loop()
 {
   timeManager->updateLoopTime();
   voltageManager->updateVoltage();
-  servoManager->updateServo();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
   arduinoShieldButtonManager->detectPress();

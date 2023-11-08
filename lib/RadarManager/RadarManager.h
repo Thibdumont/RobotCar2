@@ -1,7 +1,6 @@
 #ifndef RADAR_MANAGER_H
 #define RADAR_MANAGER_H
 
-#include <Servo.h>
 #include <Arduino.h>
 
 #define TRIG_PIN 13      // Arduino pin tied to trigger pin on the ultrasonic sensor.
