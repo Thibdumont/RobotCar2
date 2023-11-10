@@ -31,7 +31,9 @@ private:
     unsigned long lastReceiveTime;
     unsigned long heartbeat;
     int maxSpeed;
+    int safeStopDistance;
     uint8_t servoAngle;
+    uint8_t servoSpeed;
     uint16_t radarDistance;
     float unoLoopDuration;
     float batteryVoltage;

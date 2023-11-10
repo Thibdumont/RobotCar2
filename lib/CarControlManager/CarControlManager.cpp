@@ -6,6 +6,7 @@ CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *r
     this->radarManager = radarManager;
 
     maxSpeed = MOTOR_MAX_SPEED;
+    safeStopDistance = SAFE_STOP_DISTANCE;
     speedThrottle = 0;
     directionX = 0;
     boost = false;
@@ -32,7 +33,17 @@ void CarControlManager::stop()
 
 bool CarControlManager::isGoingForwardSafe()
 {
-    return radarManager->getDistance() > FORWARD_SAFE_DISTANCE;
+    return radarManager->getDistance() > safeStopDistance;
+}
+
+void CarControlManager::setSafeStopDistance(int safeStopDistance)
+{
+    this->safeStopDistance = safeStopDistance;
+}
+
+int CarControlManager::getSafeStopDistance()
+{
+    return this->safeStopDistance;
 }
 
 void CarControlManager::setDirectionX(float directionX)

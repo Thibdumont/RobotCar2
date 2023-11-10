@@ -42,7 +42,7 @@ void SerialComManager::receiveSerialData()
     }
     if (c == '}') // Data frame tail check
     {
-        StaticJsonDocument<300> json;
+        StaticJsonDocument<400> json;
         deserializeJson(json, serialPortData);
         serialPortData = "";
 
@@ -74,9 +74,19 @@ void SerialComManager::receiveSerialData()
             servoManager->applyRotation((int)json["headPosition"]);
         }
 
+        if (json.containsKey("servoSpeed"))
+        {
+            servoManager->setServoSpeed((int)json["servoSpeed"]);
+        }
+
         if (json.containsKey("maxSpeed"))
         {
             carControlManager->setMaxSpeed((int)json["maxSpeed"]);
+        }
+
+        if (json.containsKey("safeStopDistance"))
+        {
+            carControlManager->setSafeStopDistance((int)json["safeStopDistance"]);
         }
 
         lastReceiveTime = millis();
@@ -87,7 +97,7 @@ void SerialComManager::sendSerialData()
 {
     if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
-        StaticJsonDocument<300> json;
+        StaticJsonDocument<400> json;
         json["heartbeat"] = heartbeat++;
         if (carControlManager->getMaxSpeed() != maxSpeed || handshakeRequest)
         {
@@ -98,6 +108,11 @@ void SerialComManager::sendSerialData()
         {
             servoAngle = servoManager->getAngle();
             json["servoAngle"] = servoAngle;
+        }
+        if (servoManager->getServoSpeed() != servoSpeed || handshakeRequest)
+        {
+            servoSpeed = servoManager->getServoSpeed();
+            json["servoSpeed"] = servoSpeed;
         }
         if (radarManager->getDistance() != radarDistance || handshakeRequest)
         {
@@ -118,6 +133,11 @@ void SerialComManager::sendSerialData()
         {
             wifiSoftApMode = arduinoShieldButtonManager->getWifiSoftApMode();
             json["wifiSoftApMode"] = wifiSoftApMode;
+        }
+        if (carControlManager->getSafeStopDistance() != safeStopDistance || handshakeRequest)
+        {
+            safeStopDistance = carControlManager->getSafeStopDistance();
+            json["safeStopDistance"] = safeStopDistance;
         }
         serializeJson(json, Serial);
         handshakeRequest = false; // Handshake occurs only once

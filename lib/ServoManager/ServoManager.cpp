@@ -4,10 +4,11 @@
 ServoManager::ServoManager(TimeManager *timeManager)
 {
     this->timeManager = timeManager;
+    this->servoSpeed = SERVO_DEFAULT_SPEED;
     servo.attach(PIN_Servo_z, 500, 2400); // 500: 0 degree  2400: 180 degree
     servo.attach(PIN_Servo_z);
     servo.setEasingType(EASE_LINEAR);
-    servo.easeTo(90, SERVO_SPEED); // set the servo position in the middle
+    servo.easeTo(90, servoSpeed); // set the servo position in the middle
 }
 
 void ServoManager::applyRotation(uint8_t newAngle)
@@ -15,7 +16,7 @@ void ServoManager::applyRotation(uint8_t newAngle)
     if (angle != newAngle)
     {
         angle = newAngle;
-        servo.startEaseTo(angle, SERVO_SPEED, START_UPDATE_BY_INTERRUPT);
+        servo.startEaseTo(angle, servoSpeed, START_UPDATE_BY_INTERRUPT);
     }
 }
 
@@ -24,7 +25,17 @@ uint8_t ServoManager::getAngle()
     return angle;
 }
 
+void ServoManager::setServoSpeed(uint8_t servoSpeed)
+{
+    this->servoSpeed = servoSpeed;
+}
+
+uint8_t ServoManager::getServoSpeed()
+{
+    return servoSpeed;
+}
+
 void ServoManager::testServo()
 {
-    servo.startEaseTo(angle, 0, START_UPDATE_BY_INTERRUPT);
+    servo.startEaseTo(angle, servoSpeed, START_UPDATE_BY_INTERRUPT);
 }

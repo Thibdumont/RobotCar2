@@ -7,7 +7,7 @@
 
 #define TURN_DEAD_ZONE 0.05
 #define MOTOR_THROTTLE_DEADZONE 0.01
-#define FORWARD_SAFE_DISTANCE 12
+#define SAFE_STOP_DISTANCE 12
 
 class CarControlManager
 {
@@ -20,6 +20,8 @@ public:
     void setDirectionX(float);
     void stop();
     bool isGoingForwardSafe();
+    void setSafeStopDistance(int);
+    int getSafeStopDistance();
     void applyMotorDirectionXAndThrottle();
 
 private:
@@ -29,6 +31,7 @@ private:
     float speedThrottle;
     bool boost;
     int maxSpeed;
+    int safeStopDistance;
     uint16_t getSpeed(MotorSide motorDirection, uint16_t baseSpeed, float speedThrottle, float directionX);
     uint16_t getDirectionSpeedModifier(uint16_t baseSpeed, float speedThrottle, float directionX);
     MotorDirection getDirection(MotorSide motorDirection, float speedThrottle, float directionX);
