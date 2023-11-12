@@ -56,8 +56,7 @@ void SerialComManager::processCommands(String serialPortData)
 {
     StaticJsonDocument<400> json;
     deserializeJson(json, serialPortData);
-    serialPortData = "";
-    if (json.containsKey("handshake"))
+    if (json.containsKey("syncRequest"))
     {
         syncRequestReceived = true;
     }
