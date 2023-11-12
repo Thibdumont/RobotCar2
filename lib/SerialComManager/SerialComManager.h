@@ -26,7 +26,8 @@ private:
     VoltageManager *voltageManager;
     RadarManager *radarManager;
     ArduinoShieldButtonManager *arduinoShieldButtonManager;
-    boolean handshakeRequest;
+    boolean syncRequestReceived;
+    boolean syncRequestSent;
     unsigned long lastSendTime;
     unsigned long lastReceiveTime;
     unsigned long heartbeat;
@@ -38,6 +39,8 @@ private:
     float unoLoopDuration;
     float batteryVoltage;
     boolean wifiSoftApMode;
+    void handleEspSyncRequest();
+    void processCommands(String serialPortData);
 };
 
 #endif

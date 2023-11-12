@@ -27,13 +27,13 @@ void setup()
 {
   Serial.begin(115200);
   timeManager = new TimeManager();
-  voltageManager = new VoltageManager(timeManager);
+  voltageManager = new VoltageManager();
   ledManager = new LEDManager(timeManager, voltageManager);
   arduinoShieldButtonManager = new ArduinoShieldButtonManager(ledManager);
   radarManager = new RadarManager();
   motorManager = new MotorManager();
   carControlManager = new CarControlManager(motorManager, radarManager);
-  servoManager = new ServoManager(timeManager);
+  servoManager = new ServoManager();
   infraRedCaptorManager = new InfraRedCaptorManager();
   serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager);
   mpuManager = new MpuManager();
@@ -42,7 +42,6 @@ void setup()
 void loop()
 {
   timeManager->updateLoopTime();
-  voltageManager->updateVoltage();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
   arduinoShieldButtonManager->detectPress();
