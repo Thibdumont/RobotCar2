@@ -19,7 +19,11 @@ int CarControlManager::getMaxSpeed()
 
 void CarControlManager::setMaxSpeed(int maxSpeed)
 {
-    this->maxSpeed = maxSpeed > MOTOR_MAX_SPEED ? MOTOR_MAX_SPEED : maxSpeed;
+    this->maxSpeed = maxSpeed;
+    if (maxSpeed > MOTOR_MAX_SPEED)
+    {
+        this->maxSpeed = MOTOR_MAX_SPEED;
+    }
 }
 
 void CarControlManager::stop()
@@ -59,7 +63,7 @@ void CarControlManager::setBoost(bool boost)
 
 void CarControlManager::applyMotorDirectionXAndThrottle()
 {
-    // If no input, stop the car
+    // Si pas d'input, on stoppe les moteurs
     if ((speedThrottle > -MOTOR_THROTTLE_DEADZONE && speedThrottle < MOTOR_THROTTLE_DEADZONE) && (directionX > -TURN_DEAD_ZONE && directionX < TURN_DEAD_ZONE))
     {
         motorManager->stop();

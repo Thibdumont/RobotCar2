@@ -1,8 +1,9 @@
 #include "ServoManager.h"
 #include <ServoEasing.hpp>
 
-ServoManager::ServoManager()
+ServoManager::ServoManager(TimeManager *timeManager)
 {
+    this->timeManager = timeManager;
     this->servoSpeed = SERVO_DEFAULT_SPEED;
     servo.attach(PIN_Servo_z, 500, 2400); // 500: 0 degree  2400: 180 degree
     servo.attach(PIN_Servo_z);
