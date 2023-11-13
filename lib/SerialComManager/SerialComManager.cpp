@@ -78,7 +78,7 @@ void SerialComManager::processCommands(String serialPortData)
 
     if (json.containsKey("boost"))
     {
-        (uint8_t) json["boost"] == 1 ? ledManager->changeColor(255, 0, 0) : ledManager->changeColor(255, 0, 255);
+        // (uint8_t) json["boost"] == 1 ? ledManager->changeColor(255, 0, 0) : ledManager->changeColor(255, 0, 255);
         carControlManager->setBoost((uint8_t)json["boost"]);
         carControlManager->applyMotorDirectionXAndThrottle();
     }
