@@ -2,6 +2,7 @@
 #define SERVO_MANAGER_H
 
 #include <Arduino.h>
+#define SUPPRESS_HPP_WARNING
 #include <ServoEasing.h>
 #include "TimeManager.h"
 
