@@ -31,7 +31,7 @@ void CarControlManager::stop()
     motorManager->stop();
 }
 
-bool CarControlManager::isGoingForwardSafe()
+boolean CarControlManager::isGoingForwardSafe()
 {
     return radarManager->getDistance() > safeStopDistance;
 }
@@ -56,7 +56,7 @@ void CarControlManager::setSpeedThrottle(float speedThrottle)
     this->speedThrottle = speedThrottle;
 }
 
-void CarControlManager::setBoost(bool boost)
+void CarControlManager::setBoost(uint8_t boost)
 {
     this->boost = boost;
 }
@@ -70,7 +70,7 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
         return;
     }
 
-    int _maxSpeed = this->boost ? MOTOR_MAX_SPEED : this->maxSpeed;
+    int _maxSpeed = this->boost == 1 ? MOTOR_MAX_SPEED : this->maxSpeed;
     MotorDirection leftDirection;
     MotorDirection rightDirection;
 

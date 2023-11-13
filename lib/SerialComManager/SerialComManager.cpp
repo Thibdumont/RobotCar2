@@ -6,7 +6,8 @@ SerialComManager::SerialComManager(
     ServoManager *servoManager,
     VoltageManager *voltageManager,
     RadarManager *radarManager,
-    ArduinoShieldButtonManager *arduinoShieldButtonManager)
+    ArduinoShieldButtonManager *arduinoShieldButtonManager,
+    LEDManager *ledManager)
 {
     this->timeManager = timeManager;
     this->carControlManager = carControlManager;
@@ -14,6 +15,7 @@ SerialComManager::SerialComManager(
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
     this->arduinoShieldButtonManager = arduinoShieldButtonManager;
+    this->ledManager = ledManager;
     handshakeRequest = false;
     heartbeat = 0;
     lastSendTime = 0;
@@ -65,7 +67,9 @@ void SerialComManager::receiveSerialData()
 
         if (json.containsKey("boost"))
         {
-            carControlManager->setBoost(json["boost"].as<String>().equals("true"));
+            bool boost = (uint8_t)json["boost"];
+            boost ? ledManager->changeColor(255, 0, 0) : ledManager->changeColor(255, 255, 0);
+            carControlManager->setBoost((uint8_t)json["boost"]);
             carControlManager->applyMotorDirectionXAndThrottle();
         }
 

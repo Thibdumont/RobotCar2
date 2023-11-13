@@ -8,6 +8,7 @@
 #include "RadarManager.h"
 #include "VoltageManager.h"
 #include "ArduinoShieldButtonManager.h"
+#include "LEDManager.h"
 
 #define SYSTEM_DATA_SEND_INTERVAL 100
 #define ESP_DATA_MAX_RECEIVE_INTERVAL 500
@@ -15,7 +16,7 @@
 class SerialComManager
 {
 public:
-    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *);
+    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *, LEDManager *);
     void receiveSerialData();
     void sendSerialData();
 
@@ -26,6 +27,7 @@ private:
     VoltageManager *voltageManager;
     RadarManager *radarManager;
     ArduinoShieldButtonManager *arduinoShieldButtonManager;
+    LEDManager *ledManager;
     boolean handshakeRequest;
     unsigned long lastSendTime;
     unsigned long lastReceiveTime;

@@ -11,11 +11,11 @@ class ArduinoShieldButtonManager
 public:
     ArduinoShieldButtonManager(LEDManager *ledManager);
     void detectPress();
-    boolean getWifiSoftApMode();
+    uint8_t getWifiSoftApMode();
 
 private:
     LEDManager *ledManager;
-    boolean wifiSoftApMode;
+    uint8_t wifiSoftApMode;
     int lastButtonState;
     void init();
 };

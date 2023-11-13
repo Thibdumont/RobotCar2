@@ -4,7 +4,7 @@ ArduinoShieldButtonManager::ArduinoShieldButtonManager(LEDManager *ledManager)
 {
     this->ledManager = ledManager;
     lastButtonState = LOW;
-    wifiSoftApMode = false;
+    wifiSoftApMode = 0;
     pinMode(ARDUINO_SHIELD_BUTTON_PIN, INPUT_PULLUP);
     ledManager->changeColor(0, 255, 0);
 }
@@ -30,7 +30,7 @@ void ArduinoShieldButtonManager::detectPress()
     }
 }
 
-boolean ArduinoShieldButtonManager::getWifiSoftApMode()
+uint8_t ArduinoShieldButtonManager::getWifiSoftApMode()
 {
     return wifiSoftApMode;
 }
