@@ -9,15 +9,18 @@ CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *r
     safeStopDistance = SAFE_STOP_DISTANCE;
     speedThrottle = 0;
     directionX = 0;
-    boost = false;
+    turnFactor = 0;
+    autoSpeedFactor = 1;
+    autoSpeedMode = 0;
+    boost = 0;
 }
 
-int CarControlManager::getMaxSpeed()
+uint16_t CarControlManager::getMaxSpeed()
 {
     return maxSpeed;
 }
 
-void CarControlManager::setMaxSpeed(int maxSpeed)
+void CarControlManager::setMaxSpeed(uint16_t maxSpeed)
 {
     this->maxSpeed = maxSpeed;
     if (maxSpeed > MOTOR_MAX_SPEED)
@@ -36,12 +39,12 @@ boolean CarControlManager::isGoingForwardSafe()
     return radarManager->getDistance() > safeStopDistance;
 }
 
-void CarControlManager::setSafeStopDistance(int safeStopDistance)
+void CarControlManager::setSafeStopDistance(uint16_t safeStopDistance)
 {
     this->safeStopDistance = safeStopDistance;
 }
 
-int CarControlManager::getSafeStopDistance()
+uint16_t CarControlManager::getSafeStopDistance()
 {
     return this->safeStopDistance;
 }
@@ -54,6 +57,36 @@ void CarControlManager::setDirectionX(float directionX)
 void CarControlManager::setSpeedThrottle(float speedThrottle)
 {
     this->speedThrottle = speedThrottle;
+}
+
+void CarControlManager::setTurnFactor(float turnFactor)
+{
+    this->turnFactor = turnFactor;
+}
+
+float CarControlManager::getTurnFactor()
+{
+    return turnFactor;
+}
+
+void CarControlManager::setAutoSpeedFactor(float autoSpeedFactor)
+{
+    this->autoSpeedFactor = autoSpeedFactor;
+}
+
+float CarControlManager::getAutoSpeedFactor()
+{
+    return autoSpeedFactor;
+}
+
+void CarControlManager::setAutoSpeedMode(uint8_t autoSpeedMode)
+{
+    this->autoSpeedMode = autoSpeedMode;
+}
+
+uint8_t CarControlManager::getAutoSpeedmode()
+{
+    return autoSpeedMode;
 }
 
 void CarControlManager::setBoost(uint8_t boost)
@@ -70,17 +103,16 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
         return;
     }
 
-    int _maxSpeed = this->boost == 1 ? MOTOR_MAX_SPEED : this->maxSpeed;
-    MotorDirection leftDirection;
-    MotorDirection rightDirection;
+    MotorDirection leftDirection = getDirection(MotorSide::LEFT, speedThrottle, directionX);
+    MotorDirection rightDirection = getDirection(MotorSide::RIGHT, speedThrottle, directionX);
+
+    uint16_t _maxSpeed = computeMaxSpeed(leftDirection == MotorDirection::BACKWARD || rightDirection == MotorDirection::BACKWARD);
 
     uint16_t leftSpeed = (uint16_t)((float)_maxSpeed * abs(speedThrottle));
     uint16_t rightSpeed = (uint16_t)((float)_maxSpeed * abs(speedThrottle));
 
     leftSpeed = getSpeed(MotorSide::LEFT, leftSpeed, speedThrottle, directionX);
-    leftDirection = getDirection(MotorSide::LEFT, speedThrottle, directionX);
     rightSpeed = getSpeed(MotorSide::RIGHT, rightSpeed, speedThrottle, directionX);
-    rightDirection = getDirection(MotorSide::RIGHT, speedThrottle, directionX);
 
     if (isGoingForwardSafe() || leftDirection == MotorDirection::BACKWARD || rightDirection == MotorDirection::BACKWARD)
     {
@@ -129,7 +161,7 @@ uint16_t CarControlManager::getSpeed(MotorSide motorSide, uint16_t baseSpeed, fl
 
 uint16_t CarControlManager::getDirectionSpeedModifier(uint16_t baseSpeed, float speedThrottle, float directionX)
 {
-    return (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / 2)));
+    return (baseSpeed * abs(directionX) * (1 - abs(speedThrottle / this->turnFactor)));
 }
 
 MotorDirection CarControlManager::getDirection(MotorSide motorSide, float speedThrottle, float directionX)
@@ -167,4 +199,21 @@ MotorDirection CarControlManager::getDirection(MotorSide motorSide, float speedT
             }
         }
     }
+}
+
+uint16_t CarControlManager::computeMaxSpeed(boolean isGoingBackward)
+{
+    if (this->boost == 1)
+    {
+        return MOTOR_MAX_SPEED;
+    }
+    if (isGoingBackward)
+    {
+        return this->maxSpeed;
+    }
+    if (this->autoSpeedMode == 1)
+    {
+        return (uint16_t)(MOTOR_MAX_SPEED - (MOTOR_MAX_SPEED - (this->radarManager->getDistance() * this->autoSpeedFactor)));
+    }
+    return this->maxSpeed;
 }

@@ -35,7 +35,7 @@ void setup()
   carControlManager = new CarControlManager(motorManager, radarManager);
   servoManager = new ServoManager(timeManager);
   infraRedCaptorManager = new InfraRedCaptorManager();
-  serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager, ledManager);
+  serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager, infraRedCaptorManager);
   mpuManager = new MpuManager();
 }
 

@@ -8,7 +8,7 @@
 #include "RadarManager.h"
 #include "VoltageManager.h"
 #include "ArduinoShieldButtonManager.h"
-#include "LEDManager.h"
+#include "InfraRedCaptorManager.h"
 
 #define SYSTEM_DATA_SEND_INTERVAL 100
 #define ESP_DATA_MAX_RECEIVE_INTERVAL 500
@@ -16,7 +16,7 @@
 class SerialComManager
 {
 public:
-    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *, LEDManager *);
+    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *, InfraRedCaptorManager *);
     void receiveSerialData();
     void sendSerialData();
 
@@ -27,20 +27,31 @@ private:
     VoltageManager *voltageManager;
     RadarManager *radarManager;
     ArduinoShieldButtonManager *arduinoShieldButtonManager;
-    LEDManager *ledManager;
+    InfraRedCaptorManager *infraRedCaptorManager;
     boolean syncRequestReceived;
     boolean syncRequestSent;
     unsigned long lastSendTime;
     unsigned long lastReceiveTime;
     unsigned long heartbeat;
-    int maxSpeed;
-    int safeStopDistance;
+    // Motor
+    uint16_t maxSpeed;
+    uint16_t safeStopDistance;
+    float turnFactor;
+    float autoSpeedFactor;
+    uint8_t autoSpeedMode;
+    // Servo
     uint8_t servoAngle;
     uint8_t servoSpeed;
+    // Radar
     uint16_t radarDistance;
-    float unoLoopDuration;
+    // IR captor
+    uint8_t onGround;
+    // Battery
     float batteryVoltage;
-    boolean wifiSoftApMode;
+    // Wifi
+    uint8_t wifiSoftApMode;
+    // Debug
+    float unoLoopDuration;
     void processCommands(String serialPortData);
     void handleEspSyncRequest();
 };

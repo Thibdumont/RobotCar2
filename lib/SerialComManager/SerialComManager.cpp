@@ -7,7 +7,7 @@ SerialComManager::SerialComManager(
     VoltageManager *voltageManager,
     RadarManager *radarManager,
     ArduinoShieldButtonManager *arduinoShieldButtonManager,
-    LEDManager *ledManager)
+    InfraRedCaptorManager *infraRedCaptorManager)
 {
     this->timeManager = timeManager;
     this->carControlManager = carControlManager;
@@ -15,7 +15,7 @@ SerialComManager::SerialComManager(
     this->voltageManager = voltageManager;
     this->radarManager = radarManager;
     this->arduinoShieldButtonManager = arduinoShieldButtonManager;
-    this->ledManager = ledManager;
+    this->infraRedCaptorManager = infraRedCaptorManager;
 
     syncRequestReceived = false;
     syncRequestSent = false;
@@ -64,6 +64,12 @@ void SerialComManager::processCommands(String serialPortData)
         syncRequestReceived = true;
     }
 
+    // Motor
+    if (json.containsKey("maxSpeed"))
+    {
+        carControlManager->setMaxSpeed((uint16_t)json["maxSpeed"]);
+    }
+
     if (json.containsKey("directionX"))
     {
         carControlManager->setDirectionX((float)json["directionX"]);
@@ -76,31 +82,41 @@ void SerialComManager::processCommands(String serialPortData)
         carControlManager->applyMotorDirectionXAndThrottle();
     }
 
+    if (json.containsKey("safeStopDistance"))
+    {
+        carControlManager->setSafeStopDistance((uint16_t)json["safeStopDistance"]);
+    }
+
     if (json.containsKey("boost"))
     {
-        // (uint8_t) json["boost"] == 1 ? ledManager->changeColor(255, 0, 0) : ledManager->changeColor(255, 0, 255);
         carControlManager->setBoost((uint8_t)json["boost"]);
         carControlManager->applyMotorDirectionXAndThrottle();
     }
 
+    if (json.containsKey("turnFactor"))
+    {
+        carControlManager->setTurnFactor((float)json["turnFactor"]);
+    }
+
+    if (json.containsKey("autoSpeedFactor"))
+    {
+        carControlManager->setAutoSpeedFactor((float)json["autoSpeedFactor"]);
+    }
+
+    if (json.containsKey("autoSpeedMode"))
+    {
+        carControlManager->setAutoSpeedMode((uint8_t)json["autoSpeedMode"]);
+    }
+
+    // Servo
     if (json.containsKey("headPosition"))
     {
-        servoManager->applyRotation((int)json["headPosition"]);
+        servoManager->applyRotation((uint8_t)json["headPosition"]);
     }
 
     if (json.containsKey("servoSpeed"))
     {
-        servoManager->setServoSpeed((int)json["servoSpeed"]);
-    }
-
-    if (json.containsKey("maxSpeed"))
-    {
-        carControlManager->setMaxSpeed((int)json["maxSpeed"]);
-    }
-
-    if (json.containsKey("safeStopDistance"))
-    {
-        carControlManager->setSafeStopDistance((int)json["safeStopDistance"]);
+        servoManager->setServoSpeed((uint8_t)json["servoSpeed"]);
     }
 }
 
@@ -128,45 +144,60 @@ void SerialComManager::sendSerialData()
         {
             json["syncReply"] = 1;
         }
+        // Motor
         if (carControlManager->getMaxSpeed() != maxSpeed || syncRequestReceived)
         {
-            maxSpeed = carControlManager->getMaxSpeed();
-            json["maxSpeed"] = maxSpeed;
-        }
-        if (servoManager->getAngle() != servoAngle || syncRequestReceived)
-        {
-            servoAngle = servoManager->getAngle();
-            json["servoAngle"] = servoAngle;
-        }
-        if (servoManager->getServoSpeed() != servoSpeed || syncRequestReceived)
-        {
-            servoSpeed = servoManager->getServoSpeed();
-            json["servoSpeed"] = servoSpeed;
-        }
-        if (radarManager->getDistance() != radarDistance || syncRequestReceived)
-        {
-            radarDistance = radarManager->getDistance();
-            json["radarDistance"] = radarDistance;
-        }
-        if (timeManager->getLoopAverageDuration() != unoLoopDuration || syncRequestReceived)
-        {
-            unoLoopDuration = timeManager->getLoopAverageDuration();
-            json["unoLoopDuration"] = unoLoopDuration;
-        }
-        if (voltageManager->getVoltage() != batteryVoltage || syncRequestReceived)
-        {
-            batteryVoltage = voltageManager->getVoltage();
-            json["batteryVoltage"] = batteryVoltage;
-        }
-        if (arduinoShieldButtonManager->getWifiSoftApMode() != wifiSoftApMode || syncRequestReceived)
-        {
-            wifiSoftApMode = arduinoShieldButtonManager->getWifiSoftApMode();
-            json["wifiSoftApMode"] = wifiSoftApMode;
+            json["maxSpeed"] = maxSpeed = carControlManager->getMaxSpeed();
         }
         if (carControlManager->getSafeStopDistance() != safeStopDistance || syncRequestReceived)
         {
-            safeStopDistance = carControlManager->getSafeStopDistance();
-            json["safeStopDistance"] = safeStopDistance;
+            json["safeStopDistance"] = safeStopDistance = carControlManager->getSafeStopDistance();
+        }
+        if (carControlManager->getTurnFactor() != turnFactor || syncRequestReceived)
+        {
+            json["turnFactor"] = turnFactor = carControlManager->getTurnFactor();
+        }
+        if (carControlManager->getAutoSpeedFactor() != autoSpeedFactor || syncRequestReceived)
+        {
+            json["autoSpeedFactor"] = autoSpeedFactor = carControlManager->getAutoSpeedFactor();
+        }
+        if (carControlManager->getAutoSpeedmode() != autoSpeedMode || syncRequestReceived)
+        {
+            json["autoSpeedMode"] = autoSpeedMode = carControlManager->getAutoSpeedmode();
+        }
+        // Servo
+        if (servoManager->getAngle() != servoAngle || syncRequestReceived)
+        {
+            json["servoAngle"] = servoAngle = servoManager->getAngle();
+        }
+        if (servoManager->getServoSpeed() != servoSpeed || syncRequestReceived)
+        {
+            json["servoSpeed"] = servoSpeed = servoManager->getServoSpeed();
+        }
+        // Radar
+        if (radarManager->getDistance() != radarDistance || syncRequestReceived)
+        {
+            json["radarDistance"] = radarDistance = radarManager->getDistance();
+        }
+        // IR captor
+        if (infraRedCaptorManager->isOnGround() != onGround || syncRequestReceived)
+        {
+            json["onGround"] = onGround = infraRedCaptorManager->isOnGround();
+        }
+        // Battery
+        if (voltageManager->getVoltage() != batteryVoltage || syncRequestReceived)
+        {
+            json["batteryVoltage"] = batteryVoltage = voltageManager->getVoltage();
+        }
+        // Wifi
+        if (arduinoShieldButtonManager->getWifiSoftApMode() != wifiSoftApMode || syncRequestReceived)
+        {
+            json["wifiSoftApMode"] = wifiSoftApMode = arduinoShieldButtonManager->getWifiSoftApMode();
+        }
+        // Debug
+        if (timeManager->getLoopAverageDuration() != unoLoopDuration || syncRequestReceived)
+        {
+            json["unoLoopDuration"] = unoLoopDuration = timeManager->getLoopAverageDuration();
         }
         serializeJson(json, Serial);
         syncRequestReceived = false; // Sync request occurs only once
