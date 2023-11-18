@@ -27,7 +27,7 @@ void setup()
 {
   Serial.begin(115200);
   timeManager = new TimeManager();
-  voltageManager = new VoltageManager(timeManager);
+  voltageManager = new VoltageManager();
   ledManager = new LEDManager(timeManager, voltageManager);
   arduinoShieldButtonManager = new ArduinoShieldButtonManager(ledManager);
   radarManager = new RadarManager();
@@ -42,7 +42,6 @@ void setup()
 void loop()
 {
   timeManager->updateLoopTime();
-  voltageManager->updateVoltage();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
   arduinoShieldButtonManager->detectPress();
