@@ -32,7 +32,7 @@ void setup()
   arduinoShieldButtonManager = new ArduinoShieldButtonManager(ledManager);
   radarManager = new RadarManager();
   motorManager = new MotorManager();
-  carControlManager = new CarControlManager(motorManager, radarManager);
+  carControlManager = new CarControlManager(motorManager, radarManager, timeManager);
   servoManager = new ServoManager(timeManager);
   infraRedCaptorManager = new InfraRedCaptorManager();
   serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager, infraRedCaptorManager);
@@ -44,6 +44,7 @@ void loop()
   timeManager->updateLoopTime();
   serialComManager->receiveSerialData();
   serialComManager->sendSerialData();
+  carControlManager->updateCarMotion();
   arduinoShieldButtonManager->detectPress();
 
   // mpuManager->readMpuValues();

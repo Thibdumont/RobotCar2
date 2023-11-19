@@ -3,16 +3,18 @@
 
 #include "MotorManager.h"
 #include "RadarManager.h"
+#include "TimeManager.h"
 #include <Arduino.h>
 
 #define TURN_DEAD_ZONE 0.05
 #define MOTOR_THROTTLE_DEADZONE 0.01
 #define SAFE_STOP_DISTANCE 12
+#define CAR_MOTION_UPDATE_INTERVAL 100
 
 class CarControlManager
 {
 public:
-    CarControlManager(MotorManager *, RadarManager *);
+    CarControlManager(MotorManager *, RadarManager *, TimeManager *);
     uint16_t getMaxSpeed();
     void setMaxSpeed(uint16_t);
     void setSpeedThrottle(float);
@@ -28,11 +30,14 @@ public:
     boolean isGoingForwardSafe();
     void setSafeStopDistance(uint16_t);
     uint16_t getSafeStopDistance();
-    void applyMotorDirectionXAndThrottle();
+    void applyCarMotion();
+    void updateCarMotion();
 
 private:
     MotorManager *motorManager;
     RadarManager *radarManager;
+    TimeManager *timeManager;
+    unsigned long lastCarMotionUpdate;
     float directionX;
     float speedThrottle;
     float turnFactor;

@@ -73,13 +73,13 @@ void SerialComManager::processCommands(String serialPortData)
     if (json.containsKey("directionX"))
     {
         carControlManager->setDirectionX((float)json["directionX"]);
-        carControlManager->applyMotorDirectionXAndThrottle();
+        carControlManager->applyCarMotion();
     }
 
     if (json.containsKey("speedThrottle"))
     {
         carControlManager->setSpeedThrottle((float)json["speedThrottle"]);
-        carControlManager->applyMotorDirectionXAndThrottle();
+        carControlManager->applyCarMotion();
     }
 
     if (json.containsKey("safeStopDistance"))
@@ -90,7 +90,7 @@ void SerialComManager::processCommands(String serialPortData)
     if (json.containsKey("boost"))
     {
         carControlManager->setBoost((uint8_t)json["boost"]);
-        carControlManager->applyMotorDirectionXAndThrottle();
+        carControlManager->applyCarMotion();
     }
 
     if (json.containsKey("turnFactor"))

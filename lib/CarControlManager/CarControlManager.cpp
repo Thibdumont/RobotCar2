@@ -1,9 +1,10 @@
 #include "CarControlManager.h"
 
-CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *radarManager)
+CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *radarManager, TimeManager *timeManager)
 {
     this->motorManager = motorManager;
     this->radarManager = radarManager;
+    this->timeManager = timeManager;
 
     maxSpeed = MOTOR_MAX_SPEED;
     safeStopDistance = SAFE_STOP_DISTANCE;
@@ -94,7 +95,7 @@ void CarControlManager::setBoost(uint8_t boost)
     this->boost = boost;
 }
 
-void CarControlManager::applyMotorDirectionXAndThrottle()
+void CarControlManager::applyCarMotion()
 {
     // Si pas d'input, on stoppe les moteurs
     if ((speedThrottle > -MOTOR_THROTTLE_DEADZONE && speedThrottle < MOTOR_THROTTLE_DEADZONE) && (directionX > -TURN_DEAD_ZONE && directionX < TURN_DEAD_ZONE))
@@ -122,6 +123,7 @@ void CarControlManager::applyMotorDirectionXAndThrottle()
     {
         stop();
     }
+    lastCarMotionUpdate = timeManager->getLoopTime();
 }
 
 uint16_t CarControlManager::getSpeed(MotorSide motorSide, uint16_t baseSpeed, float speedThrottle, float directionX)
@@ -216,4 +218,12 @@ uint16_t CarControlManager::computeMaxSpeed(boolean isGoingBackward)
         return (uint16_t)(MOTOR_MAX_SPEED - (MOTOR_MAX_SPEED - (this->radarManager->getDistance() * this->autoSpeedFactor)));
     }
     return this->maxSpeed;
+}
+
+void CarControlManager::updateCarMotion()
+{
+    if (timeManager->getLoopTime() - lastCarMotionUpdate > CAR_MOTION_UPDATE_INTERVAL)
+    {
+        applyCarMotion();
+    }
 }
