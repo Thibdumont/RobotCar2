@@ -57,7 +57,7 @@ void SerialComManager::receiveSerialData()
 
 void SerialComManager::processCommands(String serialPortData)
 {
-    StaticJsonDocument<512> json;
+    StaticJsonDocument<400> json; // WARNING : RAM is limited, uno might crash if you exceed 500+
     deserializeJson(json, serialPortData);
     if (json.containsKey("syncRequest"))
     {
@@ -138,7 +138,7 @@ void SerialComManager::sendSerialData()
 {
     if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
-        StaticJsonDocument<512> json;
+        StaticJsonDocument<400> json; // WARNING : RAM is limited, uno might crash if you exceed 500+
         json["heartbeat"] = heartbeat++;
         if (syncRequestReceived)
         {
