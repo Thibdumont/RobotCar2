@@ -16,11 +16,10 @@ public:
     float getLeftCaptorValue();
     float getMiddleCaptorValue();
     float getRightCaptorValue();
-    bool isOnGround();
+    uint8_t isOnGround();
     void testInfraRedCaptor();
 
 private:
 };
 
 #endif
-

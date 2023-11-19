@@ -57,7 +57,7 @@ void SerialComManager::receiveSerialData()
 
 void SerialComManager::processCommands(String serialPortData)
 {
-    StaticJsonDocument<400> json;
+    StaticJsonDocument<512> json;
     deserializeJson(json, serialPortData);
     if (json.containsKey("syncRequest"))
     {
@@ -138,7 +138,7 @@ void SerialComManager::sendSerialData()
 {
     if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
-        StaticJsonDocument<400> json;
+        StaticJsonDocument<512> json;
         json["heartbeat"] = heartbeat++;
         if (syncRequestReceived)
         {

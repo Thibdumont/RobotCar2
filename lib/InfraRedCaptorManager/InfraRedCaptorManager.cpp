@@ -22,13 +22,13 @@ float InfraRedCaptorManager::getRightCaptorValue()
     return analogRead(PIN_ITR20001xxxL);
 }
 
-bool InfraRedCaptorManager::isOnGround()
+uint8_t InfraRedCaptorManager::isOnGround()
 {
     if (getLeftCaptorValue() > IR_GROUNDED_THRESHOLD || getMiddleCaptorValue() > IR_GROUNDED_THRESHOLD || getRightCaptorValue() > IR_GROUNDED_THRESHOLD)
     {
-        return false;
+        return 0;
     }
-    return true;
+    return 1;
 }
 
 void InfraRedCaptorManager::testInfraRedCaptor()
