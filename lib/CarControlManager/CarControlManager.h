@@ -50,6 +50,7 @@ private:
     uint16_t getDirectionSpeedModifier(uint16_t baseSpeed, float speedThrottle, float directionX);
     MotorDirection getDirection(MotorSide motorDirection, float speedThrottle, float directionX);
     uint16_t computeMaxSpeed(boolean isGoingBackward);
+    uint16_t computeAutoSpeed();
 };
 
 #endif

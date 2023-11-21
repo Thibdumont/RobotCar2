@@ -138,7 +138,7 @@ void SerialComManager::sendSerialData()
 {
     if (timeManager->getLoopTime() - lastSendTime > SYSTEM_DATA_SEND_INTERVAL)
     {
-        StaticJsonDocument<400> json; // WARNING : RAM is limited, uno might crash if you exceed 500+
+        StaticJsonDocument<400> json; // WARNING : RAM is limited, uno might crash if exceeding 500+
         json["heartbeat"] = heartbeat++;
         if (syncRequestReceived)
         {

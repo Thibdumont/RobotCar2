@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #define MOTOR_MAX_SPEED 250
+#define MOTOR_MIN_SPEED 50
 
 #define PIN_Motor_PWMA 5
 #define PIN_Motor_PWMB 6
