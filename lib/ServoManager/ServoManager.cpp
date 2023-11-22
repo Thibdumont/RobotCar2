@@ -35,6 +35,11 @@ uint8_t ServoManager::getServoSpeed()
     return servoSpeed;
 }
 
+boolean ServoManager::isIdle()
+{
+    return !servo.isMoving();
+}
+
 void ServoManager::testServo()
 {
     servo.startEaseTo(angle, servoSpeed, START_UPDATE_BY_INTERRUPT);

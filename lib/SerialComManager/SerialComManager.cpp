@@ -7,7 +7,8 @@ SerialComManager::SerialComManager(
     VoltageManager *voltageManager,
     RadarManager *radarManager,
     ArduinoShieldButtonManager *arduinoShieldButtonManager,
-    InfraRedCaptorManager *infraRedCaptorManager)
+    InfraRedCaptorManager *infraRedCaptorManager,
+    RobotStateManager *robotStateManager)
 {
     this->timeManager = timeManager;
     this->carControlManager = carControlManager;
@@ -16,6 +17,7 @@ SerialComManager::SerialComManager(
     this->radarManager = radarManager;
     this->arduinoShieldButtonManager = arduinoShieldButtonManager;
     this->infraRedCaptorManager = infraRedCaptorManager;
+    this->robotStateManager = robotStateManager;
 
     syncRequestReceived = false;
     syncRequestSent = false;
@@ -184,8 +186,8 @@ void SerialComManager::sendSerialData()
         {
             json["onGround"] = onGround = infraRedCaptorManager->isOnGround();
         }
-        // Battery
-        if (voltageManager->getVoltage() != batteryVoltage || syncRequestReceived)
+        // Battery - only send when mechanical part are idle to prevent wrong measure
+        if ((voltageManager->getVoltage() != batteryVoltage && robotStateManager->isIdle()) || syncRequestReceived)
         {
             json["batteryVoltage"] = batteryVoltage = voltageManager->getVoltage();
         }

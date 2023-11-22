@@ -10,6 +10,7 @@
 #include "SerialComManager.h"
 #include "MpuManager.h"
 #include "ArduinoShieldButtonManager.h"
+#include "RobotStateManager.h"
 
 TimeManager *timeManager;
 VoltageManager *voltageManager;
@@ -22,6 +23,7 @@ RadarManager *radarManager;
 InfraRedCaptorManager *infraRedCaptorManager;
 SerialComManager *serialComManager;
 MpuManager *mpuManager;
+RobotStateManager *robotStateManager;
 
 void setup()
 {
@@ -35,8 +37,9 @@ void setup()
   carControlManager = new CarControlManager(motorManager, radarManager, timeManager);
   servoManager = new ServoManager(timeManager);
   infraRedCaptorManager = new InfraRedCaptorManager();
-  serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager, infraRedCaptorManager);
+  robotStateManager = new RobotStateManager(carControlManager, servoManager);
   mpuManager = new MpuManager();
+  serialComManager = new SerialComManager(timeManager, carControlManager, servoManager, voltageManager, radarManager, arduinoShieldButtonManager, infraRedCaptorManager, robotStateManager);
 }
 
 void loop()

@@ -32,6 +32,7 @@ public:
     uint16_t getSafeStopDistance();
     void applyCarMotion();
     void updateCarMotion();
+    boolean isIdle();
 
 private:
     MotorManager *motorManager;

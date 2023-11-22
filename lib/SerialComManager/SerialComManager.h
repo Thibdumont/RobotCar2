@@ -9,6 +9,7 @@
 #include "VoltageManager.h"
 #include "ArduinoShieldButtonManager.h"
 #include "InfraRedCaptorManager.h"
+#include "RobotStateManager.h"
 
 #define SYSTEM_DATA_SEND_INTERVAL 100
 #define ESP_DATA_MAX_RECEIVE_INTERVAL 500
@@ -16,7 +17,7 @@
 class SerialComManager
 {
 public:
-    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *, InfraRedCaptorManager *);
+    SerialComManager(TimeManager *, CarControlManager *, ServoManager *, VoltageManager *, RadarManager *, ArduinoShieldButtonManager *, InfraRedCaptorManager *, RobotStateManager *);
     void receiveSerialData();
     void sendSerialData();
 
@@ -28,6 +29,7 @@ private:
     RadarManager *radarManager;
     ArduinoShieldButtonManager *arduinoShieldButtonManager;
     InfraRedCaptorManager *infraRedCaptorManager;
+    RobotStateManager *robotStateManager;
     boolean syncRequestReceived;
     boolean syncRequestSent;
     unsigned long lastSendTime;

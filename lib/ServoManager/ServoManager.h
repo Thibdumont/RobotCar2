@@ -17,6 +17,7 @@ public:
     uint8_t getAngle();
     void setServoSpeed(uint8_t);
     uint8_t getServoSpeed();
+    boolean isIdle();
     void testServo();
 
 private:

@@ -98,7 +98,7 @@ void CarControlManager::setBoost(uint8_t boost)
 void CarControlManager::applyCarMotion()
 {
     // If no input, stop the car
-    if ((speedThrottle > -MOTOR_THROTTLE_DEADZONE && speedThrottle < MOTOR_THROTTLE_DEADZONE) && (directionX > -TURN_DEAD_ZONE && directionX < TURN_DEAD_ZONE))
+    if (isIdle())
     {
         motorManager->stop();
         return;
@@ -233,4 +233,9 @@ uint16_t CarControlManager::computeAutoSpeed()
     uint16_t distance = this->radarManager->getDistance();
     // Round up the distance to the upper ten and multiply with the auto speed factor
     return min(MOTOR_MAX_SPEED, max(MOTOR_MIN_SPEED, (uint16_t)((distance + (10 - (distance % 10))) * this->autoSpeedFactor)));
+}
+
+boolean CarControlManager::isIdle()
+{
+    return (speedThrottle > -MOTOR_THROTTLE_DEADZONE && speedThrottle < MOTOR_THROTTLE_DEADZONE) && (directionX > -TURN_DEAD_ZONE && directionX < TURN_DEAD_ZONE);
 }
