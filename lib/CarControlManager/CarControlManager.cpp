@@ -7,7 +7,7 @@ CarControlManager::CarControlManager(MotorManager *motorManager, RadarManager *r
     this->timeManager = timeManager;
 
     maxSpeed = MOTOR_MAX_SPEED;
-    safeStopDistance = SAFE_STOP_DISTANCE;
+    safeStopDistance = DEFAULT_SAFE_STOP_DISTANCE;
     speedThrottle = 0;
     directionX = 0;
     turnFactor = 0;
