@@ -1,6 +1,5 @@
 # RobotCar2
 
-I was gifted an Elegoo Smart robot car v4 and started to experiment by writing some new software to provide a better experience than the one provided out of the box.
 This code is for the Arduino part of the project.
 It works with these 2 other projects :
 
