@@ -49,8 +49,4 @@ void loop()
   serialComManager->sendSerialData();
   carControlManager->updateCarMotion();
   arduinoShieldButtonManager->detectPress();
-
-  // mpuManager->readMpuValues();
-
-  // timeManager->displayLoopPerformanceStats();
 }

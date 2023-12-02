@@ -2,6 +2,7 @@
 #define RADAR_MANAGER_H
 
 #include <Arduino.h>
+#include <Ultrasonic.h>
 
 #define TRIG_PIN 13      // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN 12      // Arduino pin tied to echo pin on the ultrasonic sensor.
@@ -15,6 +16,7 @@ public:
     void testRadar();
 
 private:
+    Ultrasonic *ultrasonic;
 };
 
 #endif
